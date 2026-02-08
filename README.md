@@ -33,6 +33,18 @@ Or install in editable mode for development:
 pip install -e .
 ```
 
+### Option 3: Arch Linux (pipx)
+
+On Arch, the system Python is externally managed (PEP 668). Use **pipx** so the app runs in its own venv:
+
+```bash
+sudo pacman -S python-pipx
+pipx ensurepath
+pipx install git+https://github.com/agaragon/word-counter.git
+```
+
+Open a new terminal, then run `word-counter --help`.
+
 ## Usage
 
 ```bash
