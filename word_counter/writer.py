@@ -4,9 +4,11 @@ import csv
 import pathlib
 
 
-def write_csv(word_counts: list[tuple[str, int]], output: pathlib.Path) -> None:
-    """Write word-count pairs to a CSV file with 'word' and 'count' columns."""
+def write_csv(
+    rows: list[tuple[str, int, str]], output: pathlib.Path
+) -> None:
+    """Write word, count, and meaning to a CSV file."""
     with output.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["word", "count"])
-        writer.writerows(word_counts)
+        writer.writerow(["word", "count", "meaning"])
+        writer.writerows(rows)

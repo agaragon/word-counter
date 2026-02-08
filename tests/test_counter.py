@@ -46,3 +46,9 @@ def test_numbers_included():
     text = "file1 file2 file1"
     result = count_words(text)
     assert result == [("file2", 1), ("file1", 2)]
+
+
+def test_pure_numbers_excluded():
+    text = "hello 900 world 42"
+    result = count_words(text)
+    assert result == [("hello", 1), ("world", 1)]

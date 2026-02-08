@@ -11,5 +11,6 @@ def count_words(text: str) -> list[tuple[str, int]]:
     Empty tokens are discarded.
     """
     words = re.findall(r"[a-zA-Z0-9]+(?:'[a-zA-Z]+)?", text.lower())
+    words = [w for w in words if any(c.isalpha() for c in w)]
     counts = Counter(words)
     return sorted(counts.items(), key=lambda item: item[1])
