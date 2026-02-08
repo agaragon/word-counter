@@ -17,9 +17,12 @@ def _process_file(path: pathlib.Path, lang: str, out_path: pathlib.Path, verbose
         print(f"Error {path}: {e}", file=sys.stderr)
         return False
     word_counts = count_words(text)
-    filtered = filter_and_enrich(word_counts, lang, verbose=verbose)
-    write_csv(filtered, out_path, include_meaning=meaning)
-    print(f"Wrote {len(filtered)} words to {out_path} (from {path.name})")
+    if meaning:
+        rows = filter_and_enrich(word_counts, lang, verbose=verbose)
+    else:
+        rows = [(w, c, "") for w, c in word_counts]
+    write_csv(rows, out_path, include_meaning=meaning)
+    print(f"Wrote {len(rows)} words to {out_path} (from {path.name})")
     return True
 
 
