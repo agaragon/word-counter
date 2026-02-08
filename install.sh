@@ -5,6 +5,10 @@ DIR=$(mktemp -d)
 trap 'rm -rf "$DIR"' EXIT
 command -v git >/dev/null 2>&1 || { echo "Need git installed."; exit 1; }
 command -v python3 >/dev/null 2>&1 || { echo "Need python3 installed."; exit 1; }
+python3 -m pip --version &>/dev/null || {
+  echo "Installing pip..."
+  curl -sS https://bootstrap.pypa.io/get-pip.py | python3 - --user
+}
 git clone --depth 1 "$REPO" "$DIR"
 python3 -m pip install --user "$DIR" || python3 -m pip install "$DIR"
 echo "Installed. Run: word-counter --help"
