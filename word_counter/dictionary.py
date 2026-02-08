@@ -1,6 +1,7 @@
 """Look up words in a language dictionary (Free Dictionary API) and return meaning if valid."""
 
 import json
+import sys
 import time
 import urllib.error
 import urllib.parse
@@ -56,14 +57,22 @@ def lookup(word: str, lang: str, cache: dict | None = None) -> str | None:
 
 
 def filter_and_enrich(
-    word_counts: list[tuple[str, int]], lang: str
+    word_counts: list[tuple[str, int]], lang: str, *, verbose: bool = False
 ) -> list[tuple[str, int, str]]:
     """Keep only words that exist in lang and add their first definition."""
     cache = _load_cache(lang)
     result = []
-    for word, count in word_counts:
+    total = len(word_counts)
+    for i, (word, count) in enumerate(word_counts):
         meaning = lookup(word, lang, cache)
         if meaning is not None:
             result.append((word, count, meaning))
+            if verbose:
+                print(f"{word}\t{count}\t{meaning}", file=sys.stderr)
+        processed = i + 1
+        if not verbose:
+            print(f"\rProcessed {processed}/{total} words, {total - processed} remaining", end="", file=sys.stderr)
+    if not verbose:
+        print(file=sys.stderr)
     _save_cache(lang, cache)
     return result
