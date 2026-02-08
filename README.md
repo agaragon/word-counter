@@ -48,13 +48,14 @@ Open a new terminal, then run `word-counter --help`.
 ## Usage
 
 ```bash
-word-counter <input> -l <LANG> [-o output] [-v]
+word-counter <input> -l <LANG> [-o output] [-v] [-m]
 ```
 
 - **input** — Path to a `.txt` or `.pdf` file, or a directory of such files.
 - **-l, --language** — Language code for dictionary lookup (e.g. `en`, `es`, `fr`).
 - **-o, --output** — Output CSV path (default: `word_counts.csv`). For a directory input, use a directory path and one CSV per file is written.
 - **-v, --verbose** — Print each word and its meaning as they are fetched.
+- **-m, --meaning** — Include word meanings in the output CSV (default: no meaning column).
 
 ### Examples
 

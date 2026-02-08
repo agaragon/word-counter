@@ -10,7 +10,7 @@ from word_counter.extractor import extract_text
 from word_counter.writer import write_csv
 
 
-def _process_file(path: pathlib.Path, lang: str, out_path: pathlib.Path, verbose: bool = False) -> bool:
+def _process_file(path: pathlib.Path, lang: str, out_path: pathlib.Path, verbose: bool = False, meaning: bool = False) -> bool:
     try:
         text = extract_text(path)
     except (FileNotFoundError, ValueError) as e:
@@ -18,7 +18,7 @@ def _process_file(path: pathlib.Path, lang: str, out_path: pathlib.Path, verbose
         return False
     word_counts = count_words(text)
     filtered = filter_and_enrich(word_counts, lang, verbose=verbose)
-    write_csv(filtered, out_path)
+    write_csv(filtered, out_path, include_meaning=meaning)
     print(f"Wrote {len(filtered)} words to {out_path} (from {path.name})")
     return True
 
@@ -52,6 +52,12 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Log each word (word, count, meaning) to the terminal as it is fetched",
     )
+    parser.add_argument(
+        "-m",
+        "--meaning",
+        action="store_true",
+        help="Include word meanings in the output CSV",
+    )
     args = parser.parse_args(argv)
 
     if not args.input.exists():
@@ -71,10 +77,10 @@ def main(argv: list[str] | None = None) -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
         ok = 0
         for path in files:
-            if _process_file(path, lang, out_dir / f"{path.stem}.csv", verbose=args.verbose):
+            if _process_file(path, lang, out_dir / f"{path.stem}.csv", verbose=args.verbose, meaning=args.meaning):
                 ok += 1
         if ok < len(files):
             sys.exit(1)
     else:
-        if not _process_file(args.input, lang, args.output, verbose=args.verbose):
+        if not _process_file(args.input, lang, args.output, verbose=args.verbose, meaning=args.meaning):
             sys.exit(1)
